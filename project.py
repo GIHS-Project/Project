@@ -47,16 +47,18 @@ def Login():
     print("Enter Username")
     user=input()
     print("Enter Password")
-    passwd=input()
-    mypass=mycon.execute(f"select password from users where User_name='{user}';")
+    pa=input()
+    passwd=(f"('{pa}',)")
+    mycon.execute(f"select password from users where User_name='{user}';")
+    mypass=mycon.fetchone()
     print(mypass)
     print(user,mypass,passwd)
-#    if passwd != mypass:
- #       print("Incorrect User_name or Password")
-  #      Login()
-   # else:
-    #    print(f"Signed in as {user}")
-     #   return(user)
+    if passwd != mypass:
+        print("Incorrect User_name or Password")
+        Login()
+    else:
+        print(f"Signed in as {user}")
+        return(user)
 def Main():
     print(f"welcome,{user_name}")
     print("Choose an option from below to Continue:")
