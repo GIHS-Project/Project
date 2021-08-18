@@ -19,7 +19,12 @@ def Startup():
     r=int(input())
     if r==2:
         Signup()
-    
+def coin():
+    mycon.execute(f"select Coins from users where User_name='{user}';")
+    coins=mycon.fetchone()
+    for i in coins:
+        mycoins=i
+    return(mycoins)
 def Signup():
     print("******Signup******")
     print("Create a User_name")
@@ -52,54 +57,97 @@ def Login():
     mypassd=mycon.fetchone()
     for i in mypassd:
         mypass=i
-    print(user,mypass,passwd)
     if passwd != mypass:
         print("Incorrect User_name or Password")
         Login()
     else:
         print(f"Signed in as {user}")
-        return(user)
+    return(user)
 def Main():
-    print(f"welcome,{user_name}")
+    print(f"welcome {user}")
     print("Choose an option from below to Continue:")
     print("1.Take a Draw for pokemones.")
-    print("2.View all your pokemones.")#m_stephin
+    print("2.View your pokemones.")#m_stephin
     print("3.Match.")
     print("4.Check my balance.")#JJ
+    print("5.Close")
+    response=int(input())
+    if response==1:
+        random_poki()
+        Main()
+    if response ==2:
+        Pokemones()
+        Main()
+    if response ==3:
+        print("Match")
+        Main()
+    if response == 4:
+        print(coin())
+        input("Press enter to continue..")
+        Main()
+    if response ==5:
+        print("Thank U")
 def random_poki():
-    print("Your Coins:{coins}")
+    print("******Pokemone_Draw******")
+    print(f"Your Coins:{mycoin}")
     print("Cost per draw: 1 coin")
     print("Enter the number of draw u would like to take.")
     a = int(input())
-    y = 1
-    for i in range(0, a):
-        x = random.randint(1, 799)
-        name=df.iloc[x,1]
-        type_1=df.iloc[x,2]
-        type_2=df.iloc[x,3]
-        total=df.iloc[x,4]
-        hp=df.iloc[x,5]
-        attack=df.iloc[x,6]
-        defense=df.iloc[x,7]
-        sp_atk=df.iloc[x,8]
-        sp_def=df.iloc[x,9]
-        speed=df.iloc[x,10]
-        generation=df.iloc[x,11]
-        legendary=df.iloc[x,12]
-        print("Draw No ", y,f": {name}")
-        ids=['Total', 'Health', 'Attack', 'Defense', 'special_attack', 'Special_Defense', 'Speed']
-        values=[total,hp,attack,defense,sp_atk,sp_def,speed]
-        insert=(f"insert into {user_name} value('{name}','{type_1}','{type_2}',{total},{hp},{attack},{defense},{sp_atk},{sp_def},{speed},{generation},'{legendary}')")
-        mycon.execute(sql)
+    if a>coin():
+        print(f"U donot have enough Coins to make {a} draws!")
+        random_poki()
+    else:
+        y = 1
+        for i in range(0, a):
+            x = random.randint(1, 799)
+            name=df.iloc[x,1]
+            type_1=df.iloc[x,2]
+            type_2=df.iloc[x,3]
+            total=df.iloc[x,4]
+            hp=df.iloc[x,5]
+            attack=df.iloc[x,6]
+            defense=df.iloc[x,7]
+            sp_atk=df.iloc[x,8]
+            sp_def=df.iloc[x,9]
+            speed=df.iloc[x,10]
+            generation=df.iloc[x,11]
+            legendary=df.iloc[x,12]
+            print("Draw No ", y,f": {name}")
+            ids=['Total', 'Health', 'Attack', 'Defense', 'special_attack', 'Special_Defense', 'Speed']
+            values=[total,hp,attack,defense,sp_atk,sp_def,speed]
+            insert=(f"insert into {user} value('{name}','{type_1}','{type_2}',{total},{hp},{attack},{defense},{sp_atk},{sp_def},{speed},{generation},'{legendary}')")
+            mycon.execute(insert)
+            sql.commit()
+            y = y+1
+            pl.barh(ids,values,)
+            if df.iloc[x,12]==True:
+                pl.title(f"{df.iloc[x, 1]},Legendary\nGeneration:{df.iloc[x, 11]}")
+                pl.show()
+            else:
+                pl.title(f"{df.iloc[x, 1]}\nGeneration:{df.iloc[x, 11]}")
+                pl.show()
+        balance=mycoin-y
+        new_balance=(f"update users set coins={balance} where User_name='{user}'")
+        mycon.execute(new_balance)
         sql.commit()
-        y = y+1
-        pl.barh(ids,values,)
-        if df.iloc[x,12]==True:
-            pl.title(f"{df.iloc[x, 1]},Legendary\nGeneration:{df.iloc[x, 11]}")
-            pl.show()
-        else:
-            pl.title(f"{df.iloc[x, 1]}\nGeneration:{df.iloc[x, 11]}")
-            pl.show()
+    Main()
+def Pokemones():
+    print("1.See names of all your pokemones.")
+    print("2.See names of all your Legendery Pokemones")
+    print("3.see full details of all your pokemones")
+    r=int(input())
+    if r == 1:
+        pokemones=pd.read_sql(f"select Name,total from {user} orderby total;",sql)
+        print(pokemones)
+        Main()
+    if r == 2:
+        pokemones=pd.read_sql(f"select name,total from {user} where legendary='true' orderby total",sql)
+        print(pokemones)
+        Main()
+    if r == 3:
+        pokemones=pd.read_sql(f"select * from {user}")
+        Main()
 Startup()
-user_name=Login()
+user=Login()
+mycoin=coin()
 Main()
