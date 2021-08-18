@@ -137,11 +137,11 @@ def Pokemones():
     print("3.see full details of all your pokemones")
     r=int(input())
     if r == 1:
-        pokemones=pd.read_sql(f"select Name,total from {user} orderby total;",sql)
+        pokemones=pd.read_sql(f"select Name,total from {user} order by total",sql)
         print(pokemones)
         Main()
     if r == 2:
-        pokemones=pd.read_sql(f"select name,total from {user} where legendary='true' orderby total",sql)
+        pokemones=pd.read_sql(f"select name,total from {user} where legendary='true' order by total",sql)
         print(pokemones)
         Main()
     if r == 3:
