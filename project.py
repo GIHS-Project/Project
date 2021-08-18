@@ -47,11 +47,11 @@ def Login():
     print("Enter Username")
     user=input()
     print("Enter Password")
-    pa=input()
-    passwd=(f"('{pa}',)")
+    passwd=input()
     mycon.execute(f"select password from users where User_name='{user}';")
-    mypass=mycon.fetchone()
-    print(mypass)
+    mypassd=mycon.fetchone()
+    for i in mypassd:
+        mypass=i
     print(user,mypass,passwd)
     if passwd != mypass:
         print("Incorrect User_name or Password")
@@ -85,6 +85,7 @@ def random_poki():
         sp_def=df.iloc[x,9]
         speed=df.iloc[x,10]
         generation=df.iloc[x,11]
+        legendary=df.iloc[x,12]
         print("Draw No ", y,f": {name}")
         ids=['Total', 'Health', 'Attack', 'Defense', 'special_attack', 'Special_Defense', 'Speed']
         values=[total,hp,attack,defense,sp_atk,sp_def,speed]
@@ -101,3 +102,4 @@ def random_poki():
             pl.show()
 Startup()
 user_name=Login()
+Main()
