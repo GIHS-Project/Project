@@ -86,7 +86,7 @@ def Main():
         input("Press enter to continue..")
         Main()
     if response ==5:
-        print("Thank U")
+        quit()
 def random_poki():
     print("******Pokemone_Draw******")
     print(f"Your Coins:{mycoin}")
