@@ -64,7 +64,7 @@ def Login():
         print(f"Signed in as {user}")
     return(user)
 def Main():
-    print(f"welcome {user}")
+    print(f"*****welcome {user}*****")
     print("Choose an option from below to Continue:")
     print("1.Take a Draw for pokemones.")
     print("2.View your pokemones.")#m_stephin
@@ -126,12 +126,13 @@ def random_poki():
             else:
                 pl.title(f"{df.iloc[x, 1]}\nGeneration:{df.iloc[x, 11]}")
                 pl.show()
-        balance=mycoin-y
+        balance=mycoin-(y-1)
         new_balance=(f"update users set coins={balance} where User_name='{user}'")
         mycon.execute(new_balance)
         sql.commit()
     Main()
 def Pokemones():
+    print("*******View Pokemones*******")
     print("1.See names of all your pokemones.")
     print("2.See names of all your Legendery Pokemones")
     print("3.see full details of all your pokemones")
@@ -141,12 +142,21 @@ def Pokemones():
         print(pokemones)
         Main()
     if r == 2:
-        pokemones=pd.read_sql(f"select name,total from {user} where legendary='true' order by total",sql)
+        pokemones=pd.read_sql(f"select name,total from {user} where legendery='true' order by total",sql)
         print(pokemones)
         Main()
     if r == 3:
-        pokemones=pd.read_sql(f"select * from {user}")
+        pokemones=pd.read_sql(f"select * from {user} order by total",sql)
+        print(pokemones)
         Main()
+def Match():
+    print("**********Match**********")
+    print("1.Practice")
+    print("2.Match - Entry fee :2,double back after win")
+    print("3.Match -Hard Mode- Entry fee :5, double back after win")
+def base_match():
+    print("uiy")
+
 Startup()
 user=Login()
 mycoin=coin()
