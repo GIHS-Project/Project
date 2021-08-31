@@ -55,14 +55,19 @@ def Login():
     passwd=input()
     mycon.execute(f"select password from users where User_name='{user}';")
     mypassd=mycon.fetchone()
-    for i in mypassd:
-        mypass=i
-    if passwd != mypass:
-        print("Incorrect User_name or Password")
+    
+    try:
+        for i in mypassd:
+            mypass=i
+        if passwd != mypass:
+            print("Incorrect User_name or Password")
+            Login()
+        else:
+            print(f"Signed in as {user}")
+        return(user)
+    except:
+        print("Error:Account Doesn't Exist")
         Login()
-    else:
-        print(f"Signed in as {user}")
-    return(user)
 def Main():
     print(f"*****welcome {user}*****")
     print("Choose an option from below to Continue:")
