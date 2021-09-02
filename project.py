@@ -17,7 +17,7 @@ try:
 except:
     print("MySQL: Connection Error")
     print("Check your Mysql Config.")
-    quit()
+    quit()    
 def Startup():
     print("==========Pokemones==========")
     print("1.Login\n2.Signup")
@@ -28,6 +28,8 @@ def Startup():
         Startup()
     if r==2:
         Signup()
+    else:
+        pass
 def coin():
     mycon.execute(f"select Coins from users where User_name='{user}';")
     coins=mycon.fetchone()
@@ -91,7 +93,7 @@ def Main():
         Pokemones()
         Main()
     if response ==3:
-        Practice_Match()
+        Base_Match()
         Main()
     if response == 4:
         print(coin())
@@ -166,19 +168,90 @@ def Match():
     print("1.Practice - Free")
     print("2.Match - Entry fee :2,double back after win")
     print("3.Match -Hard Mode- Entry fee :5, double back after win")
-def Practice_Match():
+def Base_Match():
     print("===========Practice===========")
     print("Select your pokemone:")
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
-    u=int((input("Select Your Pokemone:")))
-    name=df.iloc[u,1]
-    hp=df.iloc[u,5]
-    attack=df.iloc[u,6]
-    defense=df.iloc[u,7]
-    sp_atk=df.iloc[u,8]
-    sp_def=df.iloc[u,9]
-    speed=df.iloc[u,10]
+    try:
+        u=int((input("Select Your Pokemone:")))
+    except:
+        print("expected input was as integer")
+    my_name=pk.iloc[u,1]
+    my_hp=pk.iloc[u,5]
+    my_attack=pk.iloc[u,6]
+    my_defense=pk.iloc[u,7]
+    my_sp_atk=pk.iloc[u,8]
+    my_sp_def=pk.iloc[u,9]
+    my_speed=pk.iloc[u,10]
+    x = random.randint(1, 799)
+    name=df.iloc[x,1]
+    hp=df.iloc[x,5]
+    attack=df.iloc[x,6]
+    defense=df.iloc[x,7]
+    sp_atk=df.iloc[x,8]
+    sp_def=df.iloc[x,9]
+    speed=df.iloc[x,10]
+    print("******************************")
+    print("Your pokemone:")
+    print("Name: ",my_name)
+    print("Health Points: ",my_hp)
+    print("Attack: ",my_attack)
+    print("Defence: ",my_defense)
+    print("Special_Attack:",my_sp_atk)
+    print("Special_Defence:",my_sp_def)
+    print("Speed: ",my_speed)
+    print("******************************")
+    print("Opponent:")
+    print("Name: ",name)
+    print("Health Points: ",hp)
+    print("Attack: ",attack)
+    print("Defence: ",defense)
+    print("Special_Attack:",sp_atk)
+    print("Special_Defence:",sp_def)
+    print("Speed: ",speed)
+    print("******************************")
+    while my_hp<=0 or hp<=0:
+        print("1.Attack")
+        print("2.special_Attack")
+        print("2.Run + Special_Attack")
+        print("3.defence")
+        print("4.Special_Defence")
+        print("5.Pass/Skip")
+        try:
+            x=int(input("Enter Your Move: "))
+        except:
+            print("Enter a integer in range 1-5")
+        if x == 1:
+            print("You:Attack")
+            y=random.randint(1,3)
+            if y==1:
+                print('Opponent: Special Deffence')
+                a=sp_def/2
+                my_hp=my_hp-a
+                b=my_attack-sp_def
+                if b>=0:
+                    hp-b
+                elif b<0:
+                    my_hp-abs(b/8)
+                    hp-my_attack/8
+            if y==2:
+                print("Opponent: Attack")
+                a=my_attack-attack
+                if a<0:
+                    my_hp-abs(a)
+                if a>=0:
+                    hp-a
+            if y==3:
+                print("Opponent:Defence")
+                a=my_attack-defense
+                if a>=0:
+                    hp-a
+                if a<0:
+                    b=defense/4
+                    my_hp-b
+        if x == 2:
+            print("You: Special Attack")
 
 Startup()
 user=Login()
