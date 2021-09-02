@@ -1,14 +1,13 @@
 Format of users table in MySQL. 
 mysql> desc users;
-+-----------+-------------+------+-----+---------+----------------+
-| Field     | Type        | Null | Key | Default | Extra          |
-+-----------+-------------+------+-----+---------+----------------+
-| User_ID   | int         | NO   | PRI | NULL    | auto_increment |
-| User_Name | varchar(30) | NO   | UNI | NULL    |                |
-| password  | varchar(30) | NO   |     | NULL    |                |
-| Coins     | int         | YES  |     | 50      |                |
-+-----------+-------------+------+-----+---------+----------------+
-4 rows in set (0.00 sec)
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| User_name | varchar(30) | NO   | PRI | NULL    |       |
+| Password  | varchar(30) | NO   |     | NULL    |       |
+| Coins     | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
 
 Format of pokemones in MySQL.
 mysql> desc pokemones;
