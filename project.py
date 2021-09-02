@@ -52,7 +52,7 @@ def Signup():
             sql.commit()
             print("Successfuly created an account.")
         except:
-            print("User_name already taken.\nTry again")
+            print("User_name already taken.\nTry another User_name.")
 def Login():
     print("*******Login*******")
     user=input("Enter Username: ")
@@ -91,7 +91,7 @@ def Main():
         Pokemones()
         Main()
     if response ==3:
-        print("Match")
+        Practice_Match()
         Main()
     if response == 4:
         print(coin())
@@ -169,7 +169,7 @@ def Match():
 def Practice_Match():
     print("===========Practice===========")
     print("Select your pokemone:")
-
+    print(pd.read_sql(f"select * from {user} order by total;",sql))
 Startup()
 user=Login()
 mycoin=coin()
