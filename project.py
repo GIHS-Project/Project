@@ -150,16 +150,16 @@ def Pokemones():
     print("3.see full details of all your pokemones")
     r=int(input())
     if r == 1:
-        pokemones=pd.read_sql(f"select Name,total from {user} order by total",sql)
-        print(pokemones)
+        print(pd.read_sql(f"select Name,total from {user} order by total",sql))
+        input("Press Enter to continue...")
         Main()
     if r == 2:
-        pokemones=pd.read_sql(f"select name,total from {user} where legendery='true' order by total",sql)
-        print(pokemones)
+        print(pd.read_sql(f"select name,total from {user} where legendery='true' order by total",sql))
+        input("Press Enter to continue...")
         Main()
     if r == 3:
-        pokemones=pd.read_sql(f"select * from {user} order by total",sql)
-        print(pokemones)
+        print(pd.read_sql(f"select * from {user} order by total",sql))
+        input("Press Enter to continue...")
         Main()
 def Match():
     print("===========Match===========")
@@ -169,7 +169,17 @@ def Match():
 def Practice_Match():
     print("===========Practice===========")
     print("Select your pokemone:")
-    print(pd.read_sql(f"select * from {user} order by total;",sql))
+    pk=pd.read_sql(f"select * from {user} order by total;",sql)
+    print(pk)
+    u=int((input("Select Your Pokemone:")))
+    name=df.iloc[u,1]
+    hp=df.iloc[u,5]
+    attack=df.iloc[u,6]
+    defense=df.iloc[u,7]
+    sp_atk=df.iloc[u,8]
+    sp_def=df.iloc[u,9]
+    speed=df.iloc[u,10]
+
 Startup()
 user=Login()
 mycoin=coin()
