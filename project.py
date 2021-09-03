@@ -252,6 +252,10 @@ def Base_Match():
                     my_hp-b
         if x == 2:
             print("You: Special Attack")
+            y=random.randint(1,3)
+            if y==1:
+                print("Opponent: Special Defence")
+
 
 Startup()
 user=Login()
