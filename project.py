@@ -253,8 +253,24 @@ def Base_Match():
         if x == 2:
             print("You: Special Attack")
             y=random.randint(1,3)
-            if y==1:
+            if y == 1:
                 print("Opponent: Special Defence")
+                a=sp_def/2
+                my_hp=my_hp-a
+                b=my_sp_atk-sp_def
+                if b>=0:
+                    hp-b
+                elif b<0:
+                    my_hp-abs(b/8)
+                    hp-my_attack/8
+            if y == 2:
+                print("Opponent:Defence")
+                a=my_sp_atk-defense
+                if a>=0:
+                    hp-a
+                if a<0:
+                    b=defense/4
+                    my_hp-b
 
 
 Startup()
