@@ -1,5 +1,6 @@
 print("Importing Libraries..")
 import random
+from re import match
 from numpy import select
 import pandas as pd
 import matplotlib.pyplot as pl
@@ -80,8 +81,8 @@ def Main():
     print("2.View your pokemones.")
     print("3.Match.")
     print("4.Check my balance.")
-    print("5.Sell your pokemones")
-    print("6.Close")
+    #print("5.Sell your pokemones")
+    print("5.Close")
     try:
         response=int(input("Select an option: "))
     except:
@@ -94,16 +95,16 @@ def Main():
         Pokemones()
         Main()
     if response ==3:
-        Base_Match()
+        Match()
         Main()
     if response == 4:
         print(coin())
         input("Press enter to continue..")
         Main()
-    if response == 5:
-        sell_pokemone()
-        Main()
-    if response ==6:
+    #if response == 5:
+    #    sell_pokemone()
+    #    Main()
+    if response ==5:
         quit()
 def random_poki():
     print("=======Pokemone_Draw=======")
@@ -173,9 +174,9 @@ def sell_pokemone():
         no=int((input("Select the Pokemone you wish to sell: ")))
     except:
         print("expected input was as integer")
-    name=pk.iloc[no,1]
-    gen=pk.iloc[no,11]
-    sell=(f"delete * from {user} where name ='{name}'")
+    name=pk.iloc[no,0]
+    gen=pk.iloc[no,10]
+    sell=(f"delete from {user} where name ='{name}'")
     mycon.execute(sell)
     if gen==1:
         gain=0.36
@@ -225,13 +226,13 @@ def Base_Match():
         u=int((input("Select Your Pokemone: ")))
     except:
         print("expected input was as integer")
-    my_name=pk.iloc[u,1]
-    my_hp=pk.iloc[u,5]
-    my_attack=pk.iloc[u,6]
-    my_defense=pk.iloc[u,7]
-    my_sp_atk=pk.iloc[u,8]
-    my_sp_def=pk.iloc[u,9]
-    my_speed=pk.iloc[u,10]
+    my_name=pk.iloc[u,0]
+    my_hp=pk.iloc[u,4]
+    my_attack=pk.iloc[u,5]
+    my_defense=pk.iloc[u,6]
+    my_sp_atk=pk.iloc[u,7]
+    my_sp_def=pk.iloc[u,8]
+    my_speed=pk.iloc[u,9]
     x = random.randint(1, 799)
     name=df.iloc[x,1]
     hp=df.iloc[x,5]
@@ -259,7 +260,7 @@ def Base_Match():
     print("Special_Defence:",sp_def)
     print("Speed: ",speed)
     print("******************************")
-    while my_hp<=0 or hp<=0:
+    while hp>0 or my_hp>0:
         print("1.Attack")
         print("2.special_Attack")
         print("3.Special_Attack charge")
@@ -380,35 +381,40 @@ def Base_Match():
         print("**************************************************")
         print(f"your HP:{my_hp}                 Opponent HP:{hp}")
         print("**************************************************")
-    if hp<=0 and my_hp<=0:
-        return("Draw")
-    elif my_hp<=0:
-        return("Lost")
-    elif hp<=0:
-        return("Won")
+        if hp<=0 and my_hp<=0:
+            return("1")
+        elif my_hp<=0:
+            return("2")
+        elif hp<=0:
+            return("3")
 def Practice():
-    result=Base_Match()
-    if result=="Draw":
+    Base_Match()
+    result=Base_Match
+    if result==1:
         print("**********")
         print("   Draw!  ")
         print("**********")
-    else:
+    if result==2:
         print("**********")
-        print(f"  You {result}  ")
+        print("   Lost!  ")
+        print("**********")
+    if result==3:
+        print("**********")
+        print("   Won!  ")
         print("**********")
 def normal_Match():
     result=Base_Match()
-    if result=="Draw":
+    if result==1:
         print("**********")
         print("   Draw!  ")
         print("**********")
-    if result=="lost":
+    if result==2:
         print("**********")
         print(" You Lost ")
         print("**********")
         mycon.execute(f"update users set coins={mycoin-2} where User_name='{user}")
         sql.commit
-    if result=="Won":
+    if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
@@ -416,17 +422,17 @@ def normal_Match():
         sql.commit
 def hard_match():
     result=Base_Match()
-    if result=="Draw":
+    if result==1:
         print("**********")
         print("   Draw!  ")
         print("**********")
-    if result=="lost":
+    if result==2:
         print("**********")
         print(" You Lost ")
         print("**********")
         mycon.execute(f"update users set coins={mycoin-5} where User_name='{user}")
         sql.commit
-    if result=="Won":
+    if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
