@@ -74,13 +74,14 @@ def Login():
         print("Error:Account Doesn't Exist")
         Login()
 def Main():
-    print("===========Main Menu===========")
+    print("================Main Menu================")
     print("Choose an option from below to Continue:")
     print("1.Take a Draw for pokemones.")
-    print("2.View your pokemones.")#m_stephin
+    print("2.View your pokemones.")
     print("3.Match.")
-    print("4.Check my balance.")#JJ
-    print("5.Close")
+    print("4.Check my balance.")
+    print("5.Sell your pokemones")
+    print("6.Close")
     try:
         response=int(input("Select an option: "))
     except:
@@ -99,7 +100,10 @@ def Main():
         print(coin())
         input("Press enter to continue..")
         Main()
-    if response ==5:
+    if response == 5:
+        sell_pokemone()
+        Main()
+    if response ==6:
         quit()
 def random_poki():
     print("=======Pokemone_Draw=======")
@@ -144,13 +148,12 @@ def random_poki():
         new_balance=(f"update users set coins={balance} where User_name='{user}'")
         mycon.execute(new_balance)
         sql.commit()
-    Main()
 def Pokemones():
     print("===========View Pokemones===========")
     print("1.See names of all your pokemones.")
     print("2.See names of all your Legendery Pokemones")
     print("3.see full details of all your pokemones")
-    r=int(input())
+    r=int(input("Select an option: "))
     if r == 1:
         print(pd.read_sql(f"select Name,total from {user} order by total",sql))
         input("Press Enter to continue...")
@@ -163,18 +166,63 @@ def Pokemones():
         print(pd.read_sql(f"select * from {user} order by total",sql))
         input("Press Enter to continue...")
         Main()
+def sell_pokemone():
+    pk=pd.read_sql(f"select * from {user} order by total;",sql)
+    print(pk)
+    try:
+        no=int((input("Select the Pokemone you wish to sell: ")))
+    except:
+        print("expected input was as integer")
+    name=pk.iloc[no,1]
+    gen=pk.iloc[no,11]
+    sell=(f"delete * from {user} where name ='{name}'")
+    mycon.execute(sell)
+    if gen==1:
+        gain=0.36
+    if gen==2:
+        gain=0.41
+    if gen==3:
+        gain=0.50
+    if gen==4:
+        gain=0.62
+    if gen==5:
+        gain=0.78
+    if gen==6:
+        gain=0.95
+    balance=mycoin+gain
+    refund=(f"update users set coins={balance} where User_name='{user}")
+    mycon.execute(refund)
+    sql.commit()
+    print("*******************************************")
+    print(f"{name} was sold.")
+    print(f"{gain} have been credited to your account.")
+    print("*******************************************")
+    Main()
 def Match():
     print("===========Match===========")
     print("1.Practice - Free")
     print("2.Match - Entry fee :2,double back after win")
     print("3.Match -Hard Mode- Entry fee :5, double back after win")
+    try:
+        r=int((input("Select Your Pokemone: ")))
+    except:
+        print("expected input was as integer")
+    if r == 1:
+        Practice()
+        Main()
+    if r == 2:
+        normal_Match()
+        Main()
+    if r == 3:
+        hard_match()
+        Main()
 def Base_Match():
     print("===========Practice===========")
     print("Select your pokemone:")
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
     try:
-        u=int((input("Select Your Pokemone:")))
+        u=int((input("Select Your Pokemone: ")))
     except:
         print("expected input was as integer")
     my_name=pk.iloc[u,1]
@@ -214,14 +262,15 @@ def Base_Match():
     while my_hp<=0 or hp<=0:
         print("1.Attack")
         print("2.special_Attack")
-        print("2.Run + Special_Attack")
-        print("3.defence")
-        print("4.Special_Defence")
-        print("5.Pass/Skip")
+        print("3.Special_Attack charge")
+        print("4.defence charge")
+        print("5.Special_Defence")
         try:
             x=int(input("Enter Your Move: "))
         except:
+            print("*****************************")
             print("Enter a integer in range 1-5")
+            print("*****************************")
         if x == 1:
             print("You:Attack")
             y=random.randint(1,3)
@@ -261,18 +310,128 @@ def Base_Match():
                 if b>=0:
                     hp-b
                 elif b<0:
-                    my_hp-abs(b/8)
-                    hp-my_attack/8
+                    my_hp=my_hp-abs(b/8)
+                    hp=hp-my_attack/8
             if y == 2:
                 print("Opponent:Defence")
                 a=my_sp_atk-defense
                 if a>=0:
-                    hp-a
+                    hp=hp-a
                 if a<0:
                     b=defense/4
-                    my_hp-b
-
-
+                    my_hp=my_hp-b
+            if y == 3:
+                print("Opponent: Special Attack")
+                a=my_sp_atk-sp_atk
+                if a>0:
+                    hp=hp-a
+                if a<0:
+                    my_hp=my_hp-abs(a)
+        if x == 3:
+            print("You: Run & Special_Attack")
+            y=random.randint(1,3)
+            if y==1:
+                print("Opponent: Special Defence")
+                a=my_sp_atk+(speed//3)
+                b=a-sp_def
+                if b>0:
+                    hp=hp-b
+                if b<0:
+                    my_hp=my_hp-abs(b)-(speed//4)
+            if y==2:
+                print("Opponent: deffence")
+                a=my_sp_atk+(speed//3)
+                b=a-defense
+                if b>0:
+                    hp=hp-b
+                if b<0:
+                    my_hp=my_hp-abs(b)-(speed//4)
+            if y==3:
+                print("Opponent: Attack")
+                a=my_sp_atk+(speed//3)
+                hp=hp-speed
+                my_hp=my_hp-(speed//2)
+        if x == 4:
+            print("You: deffence charge")
+            y=random.randint(1,3)
+            if y==1:
+                print("Opponent: knockdown")
+                a=(defense+speed)//3
+                hp=hp-a
+            if y==2 or 3:
+                print("Opponent: Special Attack")
+                my_hp=my_hp-(sp_atk-speed)
+                hp=hp-my_sp_atk-speed
+        if x == 5:
+            print("You: Special Defence")
+            y=random.randint(1,3)
+            if y==1:
+                print("Opponent: Special Attack Charge")
+                a=sp_atk+speed
+                b=my_sp_def-a
+                if b<0:
+                    my_hp=my_hp-a
+                if b>0:
+                    hp=hp-my_sp_def
+            if y==2 or 3:
+                print("Opponent: Special Defence")
+                my_hp=my_hp-5
+                hp=hp-5
+        print("**************************************************")
+        print(f"your HP:{my_hp}                 Opponent HP:{hp}")
+        print("**************************************************")
+    if hp<=0 and my_hp<=0:
+        return("Draw")
+    elif my_hp<=0:
+        return("Lost")
+    elif hp<=0:
+        return("Won")
+def Practice():
+    result=Base_Match()
+    if result=="Draw":
+        print("**********")
+        print("   Draw!  ")
+        print("**********")
+    else:
+        print("**********")
+        print(f"  You {result}  ")
+        print("**********")
+def normal_Match():
+    result=Base_Match()
+    if result=="Draw":
+        print("**********")
+        print("   Draw!  ")
+        print("**********")
+    if result=="lost":
+        print("**********")
+        print(" You Lost ")
+        print("**********")
+        mycon.execute(f"update users set coins={mycoin-2} where User_name='{user}")
+        sql.commit
+    if result=="Won":
+        print("**********")
+        print(" You Won ")
+        print("**********")
+        mycon.execute(f"update users set coins={mycoin+4} where User_name='{user}")
+        sql.commit
+def hard_match():
+    result=Base_Match()
+    if result=="Draw":
+        print("**********")
+        print("   Draw!  ")
+        print("**********")
+    if result=="lost":
+        print("**********")
+        print(" You Lost ")
+        print("**********")
+        mycon.execute(f"update users set coins={mycoin-5} where User_name='{user}")
+        sql.commit
+    if result=="Won":
+        print("**********")
+        print(" You Won ")
+        print("**********")
+        mycon.execute(f"update users set coins={mycoin+10} where User_name='{user}")
+        sql.commit
 Startup()
 user=Login()
 mycoin=coin()
