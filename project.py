@@ -1,7 +1,8 @@
 print("Importing Libraries..")
+from logging import setLoggerClass
 import random
 from re import match
-from numpy import select
+from numpy import result_type, select
 import pandas as pd
 import matplotlib.pyplot as pl
 import mysql.connector as myconn
@@ -178,7 +179,7 @@ def sell_pokemone():
         print("expected input was as integer")
     name=pk.iloc[no,0]
     gen=pk.iloc[no,10]
-    sell=(f"delete from {user} where name ='{name}'")
+    sell=(f'delete from {user} where name="{name}"')
     mycon.execute(sell)
     if gen==1:
         gain=0.36
@@ -259,7 +260,7 @@ def Base_Match():
     print("Special_Defence:",sp_def)
     print("Speed: ",speed)
     print("******************************")
-    while hp>0 or my_hp>0:
+    while hp>0 and my_hp>0:
         print("1.Attack")
         print("2.special_Attack")
         print("3.Special_Attack charge")
@@ -344,6 +345,7 @@ def Base_Match():
                 b=a-defense
                 if b>0:
                     hp=hp-b
+                    my_hp=my_hp-(a//6)
                 if b<0:
                     my_hp=my_hp-abs(b)-(speed//4)
             if y==3:
@@ -377,15 +379,20 @@ def Base_Match():
                 print("Opponent: Special Defence")
                 my_hp=my_hp-5
                 hp=hp-5
+        if my_hp<0:
+            my_hp=0
+        if hp<0:
+            hp=0
         print("**************************************************")
         print(f"your HP:{my_hp}                 Opponent HP:{hp}")
         print("**************************************************")
-        if hp<=0 and my_hp<=0:
-            return("1")
-        if my_hp<=0:
-            return("2")
-        if hp<=0:
-            return("3")
+    if hp<=0 and my_hp<=0:
+        result=1
+    elif my_hp<=0:
+        result=2
+    elif hp<=0:
+        result=3
+    return(result)
 def Practice():
     result=Base_Match()
     if result == 1:
@@ -413,13 +420,13 @@ def normal_Match():
         print("**********")
         print(" You Lost ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin-2} where User_name='{user}")
+        mycon.execute(f"update users set coins={mycoin-2} where User_name='{user};")
         sql.commit
     if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+4} where User_name='{user}")
+        mycon.execute(f"update users set coins={mycoin+4} where User_name='{user};")
         sql.commit
     Main()
 def hard_match():
@@ -432,17 +439,16 @@ def hard_match():
         print("**********")
         print(" You Lost ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin-5} where User_name='{user}")
+        mycon.execute(f"update users set coins={mycoin-5} where User_name='{user};")
         sql.commit
     if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+10} where User_name='{user}")
+        mycon.execute(f"update users set coins={mycoin+10} where User_name='{user};")
         sql.commit
     Main()
-#Startup()
-user="Habel"#Login()
+Startup()
+user=Login()
 mycoin=coin()
-#Main()
-Practice()
+Main()
