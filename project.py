@@ -98,7 +98,9 @@ def Main():
         Match()
         Main()
     if response == 4:
-        print(coin())
+        print("*********************************************")
+        print("Your Balance: ",coin())
+        print("*********************************************")
         input("Press enter to continue..")
         Main()
     #if response == 5:
@@ -210,13 +212,10 @@ def Match():
         print("expected input was as integer")
     if r == 1:
         Practice()
-        Main()
     if r == 2:
         normal_Match()
-        Main()
     if r == 3:
         hard_match()
-        Main()
 def Base_Match():
     print("===========Practice===========")
     print("Select your pokemone:")
@@ -383,25 +382,27 @@ def Base_Match():
         print("**************************************************")
         if hp<=0 and my_hp<=0:
             return("1")
-        elif my_hp<=0:
+        if my_hp<=0:
             return("2")
-        elif hp<=0:
+        if hp<=0:
             return("3")
 def Practice():
-    Base_Match()
-    result=Base_Match
-    if result==1:
+    result=Base_Match()
+    if result == 1:
         print("**********")
         print("   Draw!  ")
         print("**********")
-    if result==2:
+        Main()
+    if result == 2:
         print("**********")
-        print("   Lost!  ")
+        print("*  Lost! *")
         print("**********")
-    if result==3:
+        Main()
+    if result == 3:
         print("**********")
-        print("   Won!  ")
+        print("*  Won!  *")
         print("**********")
+        Main()
 def normal_Match():
     result=Base_Match()
     if result==1:
@@ -420,6 +421,7 @@ def normal_Match():
         print("**********")
         mycon.execute(f"update users set coins={mycoin+4} where User_name='{user}")
         sql.commit
+    Main()
 def hard_match():
     result=Base_Match()
     if result==1:
@@ -438,7 +440,9 @@ def hard_match():
         print("**********")
         mycon.execute(f"update users set coins={mycoin+10} where User_name='{user}")
         sql.commit
-Startup()
-user=Login()
+    Main()
+#Startup()
+user="Habel"#Login()
 mycoin=coin()
-Main()
+#Main()
+Practice()
