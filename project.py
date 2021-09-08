@@ -108,7 +108,7 @@ def Main():
     #    sell_pokemone()
     #    Main()
     if response ==5:
-        quit()
+        print("Thankyou for using the program")
 def random_poki():
     print("=======Pokemone_Draw=======")
     print(f"Your Coins:{mycoin}")
@@ -336,7 +336,7 @@ def Base_Match():
                 a=my_sp_atk+(speed//3)
                 b=a-sp_def
                 if b>0:
-                    hp=hp-b
+                    hp=hp-b//2
                 if b<0:
                     my_hp=my_hp-abs(b)-(speed//4)
             if y==2:
@@ -358,12 +358,12 @@ def Base_Match():
             y=random.randint(1,3)
             if y==1:
                 print("Opponent: knockdown")
-                a=(defense+speed)//3
+                a=(defense+speed)//5
                 hp=hp-a
             if y==2 or 3:
                 print("Opponent: Special Attack")
                 my_hp=my_hp-(sp_atk-speed)
-                hp=hp-my_sp_atk-speed
+                hp=hp-my_sp_atk-speed//2
         if x == 5:
             print("You: Special Defence")
             y=random.randint(1,3)
@@ -420,13 +420,13 @@ def normal_Match():
         print("**********")
         print(" You Lost ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin-2} where User_name='{user};")
+        mycon.execute(f"update users set coins={mycoin-2} where User_name='{user}';")
         sql.commit
     if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+4} where User_name='{user};")
+        mycon.execute(f"update users set coins={mycoin+4} where User_name='{user}';")
         sql.commit
     Main()
 def hard_match():
@@ -439,16 +439,16 @@ def hard_match():
         print("**********")
         print(" You Lost ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin-5} where User_name='{user};")
+        mycon.execute(f"update users set coins={mycoin-5} where User_name='{user}';")
         sql.commit
     if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+10} where User_name='{user};")
+        mycon.execute(f"update users set coins={mycoin+10} where User_name='{user}';")
         sql.commit
     Main()
 Startup()
 user=Login()
 mycoin=coin()
-Main()
+#Main()
