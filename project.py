@@ -1,7 +1,5 @@
 print("Importing Libraries..")
-from logging import setLoggerClass
 import random
-from numpy import result_type, select, sign
 import pandas as pd
 import matplotlib.pyplot as pl
 import mysql.connector as myconn
