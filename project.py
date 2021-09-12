@@ -1,13 +1,15 @@
 print("Importing Libraries..")
 from logging import setLoggerClass
 import random
-from re import match
-from numpy import result_type, select
+from numpy import result_type, select, sign
 import pandas as pd
 import matplotlib.pyplot as pl
 import mysql.connector as myconn
 info = pd.read_csv('Pokemons.csv')
 df = pd.DataFrame(info)
+pd.set_option('display.max_rows', 800)
+pd.set_option('display.max_column', 15)
+
 print("MySQL:Connecting to Database")
 try:
     sql=myconn.connect(host="localhost",user="root",passwd="12345678",database="project")
@@ -45,8 +47,10 @@ def Signup():
     c_passwd=input("Confirm Password: ")
     if len(n_passwd)<8:
         print("Password must contain atleast 8 characters.")
+        Signup()
     elif n_passwd!=c_passwd:
         print("Passwords don't match.")
+        Signup()
     else:
         try:
             insert_user=(f"insert into Users value('{n_user}','{n_passwd}',50)")
@@ -156,7 +160,8 @@ def Pokemones():
     print("===========View Pokemones===========")
     print("1.See names of all your pokemones.")
     print("2.See names of all your Legendery Pokemones")
-    print("3.see full details of all your pokemones")
+    print("3.See full details of all your pokemones")
+    print("4.See all the pokemones in the server")
     r=int(input("Select an option: "))
     if r == 1:
         print(pd.read_sql(f"select Name,total from {user} order by total",sql))
@@ -170,6 +175,8 @@ def Pokemones():
         print(pd.read_sql(f"select * from {user} order by total",sql))
         input("Press Enter to continue...")
         Main()
+    if r == 4:
+        print(df)
 def sell_pokemone():
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
@@ -272,6 +279,7 @@ def Base_Match():
             print("*****************************")
             print("Enter a integer in range 1-5")
             print("*****************************")
+        print("**************************************************")
         if x == 1:
             print("You:Attack")
             y=random.randint(1,3)
@@ -426,7 +434,7 @@ def normal_Match():
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+4} where User_name='{user}';")
+        mycon.execute(f"update users set coins={mycoin+2} where User_name='{user}';")
         sql.commit
     Main()
 def hard_match():
@@ -445,10 +453,10 @@ def hard_match():
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+10} where User_name='{user}';")
+        mycon.execute(f"update users set coins={mycoin+5} where User_name='{user}';")
         sql.commit
     Main()
 Startup()
 user=Login()
 mycoin=coin()
-#Main()
+Main()
