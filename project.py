@@ -59,6 +59,7 @@ def Signup():
             print("Successfuly created an account.")
         except:
             print("User_name already taken.\nTry another User_name.")
+            Signup()
 def Login():
     print("*******Login*******")
     user=input("Enter Username: ")
@@ -162,7 +163,8 @@ def Pokemones():
     print("4.See all the pokemones in the server")
     r=int(input("Select an option: "))
     if r == 1:
-        print(pd.read_sql(f"select Name,total from {user} order by total",sql))
+        pk=pd.read_sql(f"select Name,total from {user} order by total",sql)
+        print(pk)
         input("Press Enter to continue...")
         Main()
     if r == 2:
@@ -170,7 +172,8 @@ def Pokemones():
         input("Press Enter to continue...")
         Main()
     if r == 3:
-        print(pd.read_sql(f"select * from {user} order by total",sql))
+        pk=pd.read_sql(f"select * from {user} order by total",sql)
+        print(pk)
         input("Press Enter to continue...")
         Main()
     if r == 4:
