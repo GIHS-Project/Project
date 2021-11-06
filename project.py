@@ -227,8 +227,6 @@ def Match():
     if r == 3:
         hard_match()
 def Base_Match():
-    print("===========Practice===========")
-    print("Select your Mode:")
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
     try:
