@@ -232,7 +232,7 @@ def Base_Match():
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
     try:
-        u=int((input("Select Your Pokemone: ")))
+        u=int((input("Select Your Mode: ")))
     except:
         print("expected input was as integer")
     my_name=pk.iloc[u,0]
@@ -319,7 +319,7 @@ def Base_Match():
                 my_hp=my_hp-a
                 b=my_sp_atk-sp_def
                 if b>=0:
-                    hp-b
+                    hp=hp-b
                 elif b<0:
                     my_hp=my_hp-abs(b/8)
                     hp=hp-my_attack/8
