@@ -228,11 +228,11 @@ def Match():
         hard_match()
 def Base_Match():
     print("===========Practice===========")
-    print("Select your pokemone:")
+    print("Select your Mode:")
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
     try:
-        u=int((input("Select Your Mode: ")))
+        u=int((input("Select Your Pokemone: ")))
     except:
         print("expected input was as integer")
     my_name=pk.iloc[u,0]
