@@ -114,6 +114,7 @@ def Main():
     if response ==5:
         print("Thankyou for using the program")
 def random_poki():
+    mycoin=coin()
     print("=======Pokemone_Draw=======")
     print(f"Your Coins:{mycoin}")
     print("Cost per draw: 1 coin")
@@ -180,6 +181,7 @@ def Pokemones():
     if r == 4:
         print(df)
 def sell_pokemone():
+    mycoin=coin()
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
     try:
@@ -228,7 +230,7 @@ def Match():
         hard_match()
 def Base_Match():
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
-    print(pk)
+    mycon.execute(f"select * from {user} order by total;")
     try:
         u=int((input("Select Your Pokemone: ")))
     except:
@@ -420,6 +422,7 @@ def Practice():
         Main()
 def normal_Match():
     result=Base_Match()
+    mycoin=coin()
     if result==1:
         print("**********")
         print("   Draw!  ")
@@ -439,6 +442,7 @@ def normal_Match():
     Main()
 def hard_match():
     result=Base_Match()
+    mycoin=coin()
     if result==1:
         print("**********")
         print("   Draw!  ")
@@ -458,5 +462,4 @@ def hard_match():
     Main()
 Startup()
 user=Login()
-mycoin=coin()
 Main()
