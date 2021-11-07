@@ -230,7 +230,8 @@ def Match():
         hard_match()
 def Base_Match():
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
-    mycon.execute(f"select * from {user} order by total;")
+    lists=mycon.execute(f"select * from {user} order by total;")
+    print(lists)
     try:
         u=int((input("Select Your Pokemone: ")))
     except:
