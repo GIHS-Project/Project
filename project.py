@@ -3,10 +3,7 @@ import random
 import pandas as pd
 import matplotlib.pyplot as pl
 import mysql.connector as myconn
-info = pd.read_csv('Pokemons.csv')
-df = pd.DataFrame(info)
-pd.set_option('display.max_rows', 800)
-pd.set_option('display.max_column', 15)
+df = pd.read_csv('Pokemons.csv')
 
 print("MySQL:Connecting to Database")
 try:
@@ -86,8 +83,8 @@ def Main():
     print("2.View your pokemones.")
     print("3.Match.")
     print("4.Check my balance.")
-    #print("5.Sell your pokemones")
-    print("5.Close")
+    print("5.Sell your pokemones")
+    print("6.Close")
     try:
         response=int(input("Select an option: "))
     except:
@@ -108,14 +105,14 @@ def Main():
         print("*********************************************")
         input("Press enter to continue..")
         Main()
-    #if response == 5:
-    #    sell_pokemone()
-    #    Main()
-    if response ==5:
+    if response == 5:
+        sell_pokemone()
+        Main()
+    if response ==6:
         print("Thankyou for using the program")
 def random_poki():
     print("=======Pokemone_Draw=======")
-    print(f"Your Coins:{mycoin}")
+    print(f"Your Coins:{coin()}")
     print("Cost per draw: 1 coin")
     print("Enter the number of draw u would like to take.")
     a = int(input())
@@ -125,7 +122,7 @@ def random_poki():
     else:
         y = 1
         for i in range(0, a):
-            x = random.randint(1, 799)
+            x = random.randint(1,799)
             name=df.iloc[x,1]
             type_1=df.iloc[x,2]
             type_2=df.iloc[x,3]
@@ -152,7 +149,7 @@ def random_poki():
             else:
                 pl.title(f"{df.iloc[x, 1]}\nGeneration:{df.iloc[x, 11]}")
                 pl.show()
-        balance=mycoin-(y-1)
+        balance=coin()-(y-1)
         new_balance=(f"update users set coins={balance} where User_name='{user}'")
         mycon.execute(new_balance)
         sql.commit()
@@ -189,21 +186,21 @@ def sell_pokemone():
     name=pk.iloc[no,0]
     gen=pk.iloc[no,10]
     sell=(f'delete from {user} where name="{name}"')
+    print(sell)
     mycon.execute(sell)
     if gen==1:
-        gain=0.36
+        gain=0.46
     if gen==2:
-        gain=0.41
+        gain=0.51
     if gen==3:
-        gain=0.50
+        gain=0.60
     if gen==4:
-        gain=0.62
+        gain=0.72
     if gen==5:
-        gain=0.78
+        gain=0.88
     if gen==6:
         gain=0.95
-    balance=mycoin+gain
-    refund=(f"update users set coins={balance} where User_name='{user}")
+    refund=(f"update users set coins={coin()+gain} where User_name='{user}'")
     mycon.execute(refund)
     sql.commit()
     print("*******************************************")
@@ -226,7 +223,7 @@ def Match():
         normal_Match()
     if r == 3:
         hard_match()
-def Base_Match():
+def Base_Match(mode):
     pk=pd.read_sql(f"select * from {user} order by total;",sql)
     print(pk)
     try:
@@ -240,7 +237,14 @@ def Base_Match():
     my_sp_atk=pk.iloc[u,7]
     my_sp_def=pk.iloc[u,8]
     my_speed=pk.iloc[u,9]
-    x = random.randint(1, 799)
+    df=pd.read_csv('Pokemons.csv')
+    if mode==1:
+        df=df[df['Total']<400]
+    if mode==2:
+        df=df[df['Total']>400]
+    if mode==3:
+        df=df[df['Total']>650]
+    x = random.randint(1,len(df))
     name=df.iloc[x,1]
     hp=df.iloc[x,5]
     attack=df.iloc[x,6]
@@ -291,23 +295,23 @@ def Base_Match():
                 if b>=0:
                     hp-b
                 elif b<0:
-                    my_hp-abs(b/8)
-                    hp-my_attack/8
+                    my_hp=my_hp-abs(b/8)
+                    hp=hp-my_attack/8
             if y==2:
                 print("Opponent: Attack")
                 a=my_attack-attack
                 if a<0:
-                    my_hp-abs(a)
+                    my_hp=my_hp-abs(a)
                 if a>=0:
-                    hp-a
+                    hp=hp-a
             if y==3:
                 print("Opponent:Defence")
                 a=my_attack-defense
                 if a>=0:
-                    hp-a
+                    hp=hp-a
                 if a<0:
                     b=defense/4
-                    my_hp-b
+                    my_hp=my_hp-b
         if x == 2:
             print("You: Special Attack")
             y=random.randint(1,3)
@@ -402,7 +406,7 @@ def Base_Match():
         result=3
     return(result)
 def Practice():
-    result=Base_Match()
+    result=Base_Match(1)
     if result == 1:
         print("**********")
         print("   Draw!  ")
@@ -419,7 +423,7 @@ def Practice():
         print("**********")
         Main()
 def normal_Match():
-    result=Base_Match()
+    result=Base_Match(2)
     if result==1:
         print("**********")
         print("   Draw!  ")
@@ -428,17 +432,17 @@ def normal_Match():
         print("**********")
         print(" You Lost ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin-2} where User_name='{user}';")
-        sql.commit
+        mycon.execute(f"update users set coins={coin()-2} where User_name='{user}';")
+        sql.commit()
     if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+2} where User_name='{user}';")
-        sql.commit
+        mycon.execute(f"update users set coins={coin()+2} where User_name='{user}';")
+        sql.commit()
     Main()
 def hard_match():
-    result=Base_Match()
+    result=Base_Match(3)
     if result==1:
         print("**********")
         print("   Draw!  ")
@@ -447,16 +451,15 @@ def hard_match():
         print("**********")
         print(" You Lost ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin-5} where User_name='{user}';")
-        sql.commit
+        mycon.execute(f"update users set coins={coin()-5} where User_name='{user}';")
+        sql.commit()
     if result==3:
         print("**********")
         print(" You Won ")
         print("**********")
-        mycon.execute(f"update users set coins={mycoin+5} where User_name='{user}';")
-        sql.commit
+        mycon.execute(f"update users set coins={coin()+5} where User_name='{user}';")
+        sql.commit()
     Main()
 Startup()
 user=Login()
-mycoin=coin()
 Main()
